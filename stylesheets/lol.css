@@ -1,0 +1,177 @@
+/* Application specific CSS */
+
+
+/* Override the Palm Style */
+
+.palm-page-header {
+	-webkit-border-image: url(../images/palm-page-header.png) 35 24 13 24 repeat stretch;
+}
+.palm-page-header.logo-header img#logo {
+	margin-top: 3px;
+}
+.palm-page-header .title {
+	color: #fff;
+}
+
+#listMenu .palm-row .title,
+#savedListMenu .palm-row .title {
+    color: #483427;
+	padding-left: 38px;
+}
+
+/* Feed icons */
+
+#listMenu .palm-row .title.ICanHasCheezburger, #savedListMenu .palm-row .title.ICanHasCheezburger {
+	background: url(../images/icon-ICanHasCheezburger.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.IHasAHotdog, #savedListMenu .palm-row .title.IHasAHotdog {
+	background: url(../images/icon-IHasAHotdog.png) no-repeat 10px center;
+}
+
+/* Command Menu Override */
+
+.palm-menu.command-menu.palm-default > .palm-menu-fade {
+  background: url(../images/command-menu-gradient.png) bottom left repeat-x;
+}
+
+.palm-menu-icon.lolcat {
+	background: url(../images/menu-icon-co.png);
+}
+.palm-menu-icon.hotdog {
+	background: url(../images/menu-icon-tags.png);
+}
+.palm-menu-icon.faves {
+	background: url(../images/menu-icon-fave.png);
+}
+.palm-menu-icon.add {
+	background: url(../images/menu-icon-add.png);
+}
+.palm-menu-icon.forward-disabled {
+	background: url(../images/menu-icon-forward-disabled.png);
+}
+
+.view-menu .palm-menu-button{
+	-webkit-border-image: url(../images/palm-menu-button.png) 0 25 200 25 repeat repeat;
+}
+
+/* UI */
+
+.logo-wrapper {
+	text-align: center;
+}
+
+/* Horizontal Scroll */
+.new-feeds-scroller {
+	color: white;	
+	height: 120px;
+	width: 100%;
+	-webkit-user-drag: none;
+}
+.new-feeds-container {
+	white-space: nowrap;
+}
+.new-feed-container {
+	margin-top: 10px;
+	display: inline-block;
+	padding: 0px 5px;
+	width: 80px;		
+}
+.new-feed-pic {
+	text-align: center;
+	height: 85px;
+	width: 85px;
+	overflow: hidden;
+}
+.new-feed-text {
+	font-size: 12px;
+	text-align: center;
+	width: 85px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+
+/* Content Panel */
+
+#container {
+	margin: -10px 10px 5px;
+}
+h2#title{
+	font-family:Georgia,"Times New Roman",Times,serif;
+	color:#6f4201;
+	font-size: 1.25em; /* override ua css */
+	margin-bottom: 0;
+}
+#date {
+	font-size: .65em;
+	color: #777;
+}
+
+#content{
+	margin-top: .5em;
+	font-size: .75em;
+	color: #333;
+}
+
+#content a{
+	color: #0066CC;
+}
+
+#content small{
+	color: #777;
+}
+#content br {
+	display: none;
+}
+
+#content p{
+	margin: 0;
+	padding: 0;
+	padding-bottom: .75em;
+	font-size: 1.17em;
+}
+
+#content .video {
+	
+}
+
+/* image scale */
+#content img{
+	max-width: 300px;
+	height: auto;
+}
+
+/* YouTube */
+.youtubeThumb {
+	position: relative;
+	text-align: center;
+}
+.youtubeThumb img {
+	border:1px solid #333;
+	width: 200px;
+	max-height: 152px;
+}
+.youtubeThumb img.play {
+	width: 64px;
+	border:0;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -32px;
+	margin-left: -32px;
+}
+
+/* Twitter in Dialog */
+
+.palm-account-icon.twitter {
+	background: url(../images/header-icon-twitter.png) no-repeat 50% 50%;
+}
+#char-counter {
+	text-align: right;
+	padding-right: 10px;
+	margin-bottom: -5px;
+	color: #aaa;
+	font-size: 1.3em;
+	font-weight: bold;
+}

@@ -1,0 +1,9 @@
+<div class="palm-page-header multi-line">
+	<div class="palm-page-header-wrapper">
+		<div class="icon palm-account-icon cute"></div>
+		<div class="title un-capitalize" id="feedTitle"></div>
+		<div class="subtitle" id="feedDate"></div>
+	</div>
+</div>
+
+<div id="content"></div>

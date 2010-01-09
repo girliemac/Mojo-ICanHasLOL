@@ -1,0 +1,17 @@
+<div class="palm-page-header">
+	<div class="palm-page-header-wrapper">
+		<div class="icon palm-account-icon cute"></div>
+		<div class="title un-capitalize" id="appTitle"></div>
+	</div>
+</div>
+
+<table class="palm-divider labeled">
+	<tr>
+		<td class="left"></td>
+		<td class="label">Latest Feed</td>
+		<td class="right"></td>
+	</tr>
+</table>
+
+<div id="listMenu" x-mojo-element="List"></div>
+

@@ -1,0 +1,32 @@
+[
+  {
+	"source": "app/assistants/app-assistant.js"
+  },
+  {
+    "source": "app/assistants/stage-assistant.js"
+  },
+  {
+    "scenes": "menu",
+    "source": "app/assistants/menu-assistant.js"
+  },
+  {
+    "scenes": "content",
+    "source": "app/assistants/content-assistant.js"
+  },
+  {
+    "scenes": "bookmarks",
+    "source": "app/assistants/bookmarks-assistant.js"
+  },
+  {
+    "scenes": "about",
+    "source": "app/assistants/about-assistant.js"
+  },
+  {
+    "scenes": "bookmarked-content",
+    "source": "app/assistants/bookmarked-content-assistant.js"
+  },
+  {
+    "scenes": "twitter",
+    "source": "app/assistants/twitter-assistant.js"
+  },
+]
