@@ -1,6 +1,0 @@
-<div class="palm-row multi-line" id='#{name}_example' x-Mojo-tap-highlight="momentary">
-	<div class="palm-row-wrapper">
-		<div class="title">#{-name}</div>
-		<div class="preview">#{-description}</div>
-	</div>
-</div>

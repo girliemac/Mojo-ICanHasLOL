@@ -1,9 +1,0 @@
-<div class="palm-page-header">
-	<div class="palm-page-header-wrapper">
-		<div class="icon palm-account-icon cute"></div>
-		<div class="title">iCuteOverload for Palm</div>
-	</div>
-</div>
-
-<div id="listMenu" x-mojo-element="List"></div>
-

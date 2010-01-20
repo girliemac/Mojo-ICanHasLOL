@@ -1,5 +1,0 @@
-<div id="main" class="palm-hasheader">
-	<div class="palm-header"><div class="cute-header">Header</div></div>
-
-	<div id="myList" x-mojo-element="List"></div>
-</div>
