@@ -1,14 +1,15 @@
 function StageAssistant() {
 	//Create a database when the scene is generated
-
 	try {
 		this.db = openDatabase('lolDB', '1.0', 'LOL DB', 250000);
-		console.log("**** Created database:" +this.db);
+		//console.log("**** Created database:" +this.db);
 		this.CreateTable(this.db);
 	} catch (e){
 		console.log(e);		
 	}
-
+	
+	//Cookie
+	this.cookie = new Mojo.Model.Cookie("LolPreferences");
 }
 StageAssistant.prototype.CreateTable = function (db){
 	db.transaction( 
@@ -20,7 +21,7 @@ StageAssistant.prototype.CreateTable = function (db){
 }
 
 StageAssistant.prototype.createTableDataHandler = function(transaction, results) {
-	console.log("*** Created myBookmarks.");
+	//console.log("*** Created myBookmarks.");
 } 
 
 StageAssistant.prototype.errorHandler = function(transaction, error) { 
@@ -31,12 +32,29 @@ StageAssistant.prototype.errorHandler = function(transaction, error) {
 
 StageAssistant.prototype.setup = function() {
 	
-	this.controller.pushScene('menu', this.db, 'ICanHasCheezburger');
+	/* Get Cookie info */	
+	this.initialPage = 'ICanHasCheezburger',
+	this.siteTitle = 'I Can Has Cheezburger?'
+	
+	// retrieve the saved cookie if any
+	var savedInfo = this.cookie.get();
+	if (savedInfo) {	
+		this.initialPage = savedInfo.cookieFeed;
+		this.siteTitle = savedInfo.cookieSitename;
+	}
+	
+	if(this.initialPage == 'directory') {
+		this.controller.pushScene('allsites', this.db);
+	} else {
+		this.controller.pushScene('menu', this.db, this.initialPage, this.siteTitle);
+	}
+	
 }
 
 // App Menu Handler (Global)	
 StageAssistant.prototype.handleCommand = function(event) {
-  this.controller=Mojo.Controller.stageController.activeScene();
+  	this.controller = Mojo.Controller.stageController.activeScene();
+
     if(event.type == Mojo.Event.command) {
 
 		switch(event.command) {
@@ -64,16 +82,27 @@ StageAssistant.prototype.handleCommand = function(event) {
 			});
 			break;
 		
-		case 'go-lolcat':
-		  	this.controller.stageController.pushScene('menu', this.db, 'ICanHasCheezburger');
+		case 'go-home':
+		
+			if(this.initialPage == 'directory') {
+				this.initialPage = 'ICanHasCheezburger';
+			}
+			this.controller.stageController.popScenesTo();
+		  	this.controller.stageController.pushScene('menu', this.db, this.initialPage, this.siteTitle);
 			break;
-			
-		case 'go-hotdog':
-		  	this.controller.stageController.pushScene('menu', this.db, 'IHasAHotdog');
+
+		
+		case 'go-directory':
+		  	this.controller.stageController.popScenesTo();
+			this.controller.stageController.pushScene('allsites', this.db);
 			break;
-				
+					
 		case 'go-faves':
 		  	this.controller.stageController.pushScene('bookmarks', this.db);
+			break;
+			
+		case 'go-pref':
+	  		this.controller.stageController.pushScene('preferences', this.db);
 			break;
 			
 		}

@@ -32,10 +32,13 @@ BookmarkedContentAssistant.prototype.setup = function() {
 	    ]
 	  }]
 	};
+	this.attributes = {
+       menuClass: '.palm-dark'
+    }
 	if(this.index == this.savedList.length-1){
-		this.controller.setupWidget(Mojo.Menu.viewMenu, undefined, this.viewMenuModelFavesLast);
+		this.controller.setupWidget(Mojo.Menu.viewMenu, this.attributes, this.viewMenuModelFavesLast);
 	} else {
-		this.controller.setupWidget(Mojo.Menu.viewMenu, undefined, this.viewMenuModelFaves);
+		this.controller.setupWidget(Mojo.Menu.viewMenu, this.attributes, this.viewMenuModelFaves);
 	}	
 	
 }
@@ -100,7 +103,7 @@ BookmarkedContentAssistant.prototype.deleteRecordDataHandler = function(transact
 
 
 BookmarkedContentAssistant.prototype.activate = function(event) {
-	this.controller.get("title").innerHTML = this.savedItem.title;
+	//this.controller.get("title").innerHTML = this.savedItem.title;
 	this.controller.get("date").innerHTML = this.savedItem.date;
 	this.controller.get("content").innerHTML = this.savedItem.content;
 }

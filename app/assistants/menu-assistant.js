@@ -1,7 +1,8 @@
-function MenuAssistant(db, cat) {
+function MenuAssistant(db, feed, title) {
 	this.db = db;
-	this.url = 'http://feeds.feedburner.com/'+cat;
-	this.cat = cat;
+	this.url = 'http://feeds.feedburner.com/'+feed;
+	this.feed = feed;
+	this.title = title;
 }
 
 MenuAssistant.prototype.setup = function() {
@@ -9,6 +10,7 @@ MenuAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, Lol.commandMenuModel);
 	
 	// View Menu
+	/*
 	this.viewMenuModel = {
 		visible: true,
 		items: [
@@ -17,7 +19,7 @@ MenuAssistant.prototype.setup = function() {
 		]
 	};
 	this.controller.setupWidget(Mojo.Menu.viewMenu, { spacerHeight: 0, menuClass:'no-fade'}, this.viewMenuModel);
-	
+	*/
 	// Spinner
 	this.spinnerModel = {spinning: true};
 	this.controller.setupWidget('splash', {spinnerSize: 'large'}, this.spinnerModel);
@@ -25,19 +27,7 @@ MenuAssistant.prototype.setup = function() {
 		
 	this.list_feed = [];
    	this.list_model = { items: this.list_feed };
-
-
-	// Most Recents - Horizontal Scroll
-	/*
-	this.controller.setupWidget('newFeeds', 
-              {itemTemplate:'templates/hList-templ', listTemplate:'templates/hList-container-templ'},
-              this.list_model);
-			  
-	this.scrollNewModel = {mode: "horizontal"};
-	var horizontalElements = $$('#listElements .scroll-top-element');
-	this.scrollNewModel.snapElements = {x: horizontalElements, y: []};
-	this.controller.setupWidget('new_feeds_scroller', {}, this.scrollNewModel);
-	*/											 
+										 
 												
 	// List Widget to display RSS feed
 	this.controller.setupWidget('listMenu', {itemTemplate: 'templates/list-templ'}, this.list_model);
@@ -54,6 +44,26 @@ MenuAssistant.prototype.setup = function() {
 
 
 MenuAssistant.prototype.checkFeed = function() {
+	// Check internet Connection
+	imgObj = new Image();
+	imgObj.src = 'http://stats.wordpress.com/g.gif' + '?timestamp=' + new Date().getTime();
+	var self = this;
+	imgObj.onerror = function() {
+		//no internet conenection
+		self.controller.showAlertDialog({
+		    onChoose: function(value) {},
+			title: $L("Connection Failure"),
+			message: $L("No internet connection is detected."),
+			choices:[
+				{label: $L('OK'), value:'ok', type:'color'}    
+			]
+		});
+		self.spinnerModel.spinning = false;
+		self.controller.modelChanged(this.spinnerModel);
+		self.controller.get('splashScrim').hide();
+		break;
+	}
+	
 	//console.log('*** current='+Mojo.Host.current+' *** mojoHost='+Mojo.Host.mojoHost);
 	if (Mojo.Host.current === Mojo.Host.mojoHost) {
 		// use the proxy on mojo-host
@@ -88,10 +98,10 @@ MenuAssistant.prototype.setupModel = function(transport){
 			content: rssItems[i].getElementsByTagNameNS("http://purl.org/rss/1.0/modules/content/","encoded").item(0).textContent,
 			url: rssItems[i].getElementsByTagName("link").item(0).textContent,
 			//thumbnail: rssItems[i].getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content").item(1).getAttribute("url").textContent,
-			icon: this.cat
+			icon: this.feed
 		});
 	}
-	console.log("******* "+rssItems[0].getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content").item(0).getAttribute("url"));
+	//console.log("******* "+rssItems[0].getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content").item(0).getAttribute("url"));
 	this.controller.modelChanged(this.list_model, this);
 	
 	// Remove the spinner
@@ -134,7 +144,7 @@ MenuAssistant.prototype.handleCommand = function(event) {
 			case 'back':
 			break;
 			case 'refresh':
-				this.controller.stageController.swapScene("menu", this.db, this.cat);
+				this.controller.stageController.swapScene("menu", this.db, this.feed);
 			break;
 			default:
 				//Mojo.Controller.errorDialog("Got command " + event.command);
@@ -145,7 +155,7 @@ MenuAssistant.prototype.handleCommand = function(event) {
 
 MenuAssistant.prototype.activate = function(event) {
 	//this.controller.get("appTitle").innerHTML = Mojo.Controller.appInfo.title;
-	this.controller.get("logo").setAttribute("alt", Mojo.Controller.appInfo.title);
+	this.controller.get("feedTitle").innerHTML = this.title;
 }
 
 

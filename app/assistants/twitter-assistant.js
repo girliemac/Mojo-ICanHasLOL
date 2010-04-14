@@ -83,7 +83,7 @@ TwitterAssistant.prototype.setup = function() {
 	};
 	this.controller.setupWidget('submit-twitter', {type: Mojo.Widget.activityButton}, this.buttonModel);
 	
-	/* Enter Cookie info */
+	/* Get Cookie info */
 	var savedInfo = this.cookie.get();
 	if (savedInfo) {	
 		this.twitterModel.username = savedInfo.cookieName;
@@ -152,6 +152,7 @@ TwitterAssistant.prototype.sendPost = function(event){
 		var request = new Ajax.Request(authUrl, {
 			method: 'get',
 			evalJSON: 'force',
+			requestHeaders: ["Authorization", "Basic " + btoa(name + ":" + pass)],
 			onComplete: function(transport){
 				if (transport.responseJSON.error) {
 					// Not authenticated
@@ -160,7 +161,6 @@ TwitterAssistant.prototype.sendPost = function(event){
 					submitButtonDiv.mojo.deactivate();
 				} else {
 					// authenticated
-					
 					// Hide the error message
 					if(authErrorDiv.style.display == 'block') {
 						authErrorDiv.style.visibility = 'hidden';
@@ -176,6 +176,7 @@ TwitterAssistant.prototype.sendPost = function(event){
 						var request2 = new Ajax.Request(postUrl, {
 							method: 'post',
 							parameters: sendObj,
+							requestHeaders: ["Authorization", "Basic " + btoa(name + ":" + pass)],
 							onComplete: function(transport){
 								// close and go back
 								//console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> has been sent: ' + sendObj.status);

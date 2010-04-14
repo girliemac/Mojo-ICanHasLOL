@@ -2,46 +2,125 @@
 
 
 /* Override the Palm Style */
+body.palm-dark {
+	color: #eee;
+  	position: fixed;
+  	width: 320px;
+  	height: 480px;	
+  	background: url(../images/background.png) top center no-repeat;   
+}
+body.generic-dark {
+  	width: 100%;
+  	height: 100%;	
+  	background: #111;   
+}
+.palm-header.imageView {
+	font-size: 14px;
+}
+.palm-header.logo-header {
+	
+}
+.palm-header.logo-header span {
+	position: relative;
+	top: -17px;
+}
 
-.palm-page-header {
-	-webkit-border-image: url(../images/palm-page-header.png) 35 24 13 24 repeat stretch;
-}
-.palm-page-header.logo-header img#logo {
-	margin-top: 3px;
-}
-.palm-page-header .title {
+/* List */ 
+.palm-row .title {
 	color: #fff;
 }
 
-#listMenu .palm-row .title,
-#savedListMenu .palm-row .title {
-    color: #483427;
-	padding-left: 38px;
+/* List sections */ 
+.palm-dark .palm-divider .label {
+	color: #ffc706;
+}
+.palm-dark .palm-divider.labeled .right, .palm-dark .palm-divider.labeled .left {
+	background-image: url(../images/list-section-line.png);
 }
 
 /* Feed icons */
 
-#listMenu .palm-row .title.ICanHasCheezburger, #savedListMenu .palm-row .title.ICanHasCheezburger {
-	background: url(../images/icon-ICanHasCheezburger.png) no-repeat 10px center;
+#listMenu .palm-row .title{
+	padding-left: 42px;
 }
-#listMenu .palm-row .title.IHasAHotdog, #savedListMenu .palm-row .title.IHasAHotdog {
-	background: url(../images/icon-IHasAHotdog.png) no-repeat 10px center;
+#listMenu .palm-row .title.ICanHasCheezburger {
+	background: url(../images/list-icons/icon-ICanHasCheezburger.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.IHasAHotdog {
+	background: url(../images/list-icons/icon-IHasAHotdog.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.ROFLrazzi {
+	background: url(../images/list-icons/icon-ROFLrazzi.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.TotallyLooksLike {
+	background: url(../images/list-icons/icon-TotallyLooksLike.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.PunditKitchen {
+	background: url(../images/list-icons/icon-PunditKitchen.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.UpNextInSports {
+	background: url(../images/list-icons/icon-UpNextInSports.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.GraphJam {
+	background: url(../images/list-icons/icon-GraphJam.png) no-repeat 10px center;	
+}
+#listMenu .palm-row .title.failblog {
+	background: url(../images/list-icons/icon-failblog.png) no-repeat 10px center;	
+}
+#listMenu .palm-row .title.EngrishFunny {
+	background: url(../images/list-icons/icon-EngrishFunny.png) no-repeat 10px center;
+}
+#listMenu .palm-row .title.VeryDemotivational,
+#listMenu .palm-row .title.ActingLikeAnimals,
+#listMenu .palm-row .title.IHTPT,
+#listMenu .palm-row .title.MyFirstFail,
+#listMenu .palm-row .title.Comixed,
+#listMenu .palm-row .title.FriendsOfIrony,
+#listMenu .palm-row .title.ThereIFixedIt,
+#listMenu .palm-row .title.Failbooking,
+#listMenu .palm-row .title.Mthruf,
+#listMenu .palm-row .title.lfmf,
+#listMenu .palm-row .title.PoorlyDressed,
+#listMenu .palm-row .title.TWBO,
+#listMenu .palm-row .title.Wedinator,
+#listMenu .palm-row .title.ProbablyBadNews,
+#listMenu .palm-row .title.PictureIsUnrelated,
+#listMenu .palm-row .title.ThisIsPhotobomb,
+#listMenu .palm-row .title.Hawtness,
+#listMenu .palm-row .title.AutocompleteMe,
+#listMenu .palm-row .title.LovelyListing,
+#listMenu .palm-row .title.TTARDI,
+#listMenu .palm-row .title.UgliestTattoos,
+#listMenu .palm-row .title.Hackedirl,
+#listMenu .palm-row .title.AOT,
+#listMenu .palm-row .title.OddlySpecific,
+#listMenu .palm-row .title.ItMadeMyDay,
+#listMenu .palm-row .title.EpicWinFTW,
+#listMenu .palm-row .title.OnceUponAWin,
+#listMenu .palm-row .title.Babysaur,
+#listMenu .palm-row .title.DailySquee,
+#listMenu .palm-row .title.epicuteblog,
+#listMenu .palm-row .title.MustHaveCute {
+	background: url(../images/list-icons/icon-rss.png) no-repeat 10px center;
 }
 
 /* Command Menu Override */
 
 .palm-menu.command-menu.palm-default > .palm-menu-fade {
-  background: url(../images/command-menu-gradient.png) bottom left repeat-x;
+	background: url(../images/command-menu-gradient.png) bottom left repeat-x;
 }
 
-.palm-menu-icon.lolcat {
-	background: url(../images/menu-icon-co.png);
+.palm-menu-icon.home {
+	background: url(../images/menu-icon-home.png);
 }
-.palm-menu-icon.hotdog {
-	background: url(../images/menu-icon-tags.png);
+.palm-menu-icon.directory {
+	background: url(../images/menu-icon-list.png);
 }
 .palm-menu-icon.faves {
 	background: url(../images/menu-icon-fave.png);
+}
+.palm-menu-icon.pref {
+	background: url(../images/menu-icon-config.png);
 }
 .palm-menu-icon.add {
 	background: url(../images/menu-icon-add.png);
@@ -50,40 +129,38 @@
 	background: url(../images/menu-icon-forward-disabled.png);
 }
 
-.view-menu .palm-menu-button{
-	-webkit-border-image: url(../images/palm-menu-button.png) 0 25 200 25 repeat repeat;
-}
-
-/* UI */
-
 .logo-wrapper {
 	text-align: center;
 }
 
-/* Horizontal Scroll */
-.new-feeds-scroller {
-	color: white;	
+/* Directory Horizontal Scroll */
+.featured-scroller {	
 	height: 120px;
 	width: 100%;
+	margin-top: 5px;
+	padding: 0px 5px;
 	-webkit-user-drag: none;
 }
-.new-feeds-container {
+.featured-container {
 	white-space: nowrap;
 }
-.new-feed-container {
-	margin-top: 10px;
+.featured-thumb-container {
 	display: inline-block;
 	padding: 0px 5px;
-	width: 80px;		
+	width: 80px;
 }
-.new-feed-pic {
+.featured-thumb {
 	text-align: center;
 	height: 85px;
 	width: 85px;
-	overflow: hidden;
 }
-.new-feed-text {
+.featured-thumb img {
+	height: 80px;
+	width: 80px;
+}
+.featured-name {
 	font-size: 12px;
+	color: #fff;	
 	text-align: center;
 	width: 85px;
 	overflow: hidden;
@@ -91,35 +168,50 @@
 	white-space: nowrap;
 }
 
+/* Directory List */
+
+#allsiteMenu .palm-row .title {
+	padding: 8px 15px 0;
+}
+#allsiteMenu .palm-row .preview {
+	padding: 0 15px 10px;
+	color: #eee;
+}
 
 /* Content Panel */
 
 #container {
-	margin: -10px 10px 5px;
+	margin: 10px;
 }
 h2#title{
-	font-family:Georgia,"Times New Roman",Times,serif;
-	color:#6f4201;
+	/*font-family:Georgia,"Times New Roman",Times,serif;*/
+	color:#fff;
 	font-size: 1.25em; /* override ua css */
 	margin-bottom: 0;
 }
 #date {
 	font-size: .65em;
-	color: #777;
+	color: #eee;
 }
-
+#loading {
+	margin-top: .5em;
+	font-size: .85em;
+	color: #dedede;
+}
 #content{
 	margin-top: .5em;
 	font-size: .75em;
-	color: #333;
+	color: #fff;
 }
-
+#content .hide {
+	display: none;
+}
 #content a{
-	color: #0066CC;
+	color: #ffc706;
 }
 
 #content small{
-	color: #777;
+	color: #eee;
 }
 #content br {
 	display: none;
@@ -136,6 +228,22 @@ h2#title{
 	
 }
 
+/* Image magnify icon */
+#content p.mine_image, #content p.mine_asset {
+	position: relative;
+}
+#content p.mine_image img + div.magnify, #content p.mine_asset img + div.magnify {
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 32px;
+	height: 32px;
+	background: rgba(0,0,0,0.3) url(../images/magnify.png) top center no-repeat;
+}
+#content p.mine_image img + div.magnify:hover, #content p.mine_asset img + div.magnify:hover {
+	background-position: bottom center;
+}
+
 /* image scale */
 #content img{
 	max-width: 300px;
@@ -148,7 +256,6 @@ h2#title{
 	text-align: center;
 }
 .youtubeThumb img {
-	border:1px solid #333;
 	width: 200px;
 	max-height: 152px;
 }
@@ -161,6 +268,12 @@ h2#title{
 	margin-top: -32px;
 	margin-left: -32px;
 }
+
+/* Feedburner junk 
+#content a[rel="nofollow"] img, .feedflare {
+	display: none;
+}
+*/
 
 /* Twitter in Dialog */
 

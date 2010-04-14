@@ -34,13 +34,14 @@ ContentAssistant.prototype.setup = function() {
 	    ]
 	  }]
 	};
-
+	this.attributes = {
+       menuClass: '.palm-dark'
+    }
 	if(this.index == this.feedList.length-1){
-		this.controller.setupWidget(Mojo.Menu.viewMenu, undefined, this.viewMenuModelLast);
+		this.controller.setupWidget(Mojo.Menu.viewMenu, this.attributes, this.viewMenuModelLast);
 	} else {
-		this.controller.setupWidget(Mojo.Menu.viewMenu, undefined, this.viewMenuModel);
+		this.controller.setupWidget(Mojo.Menu.viewMenu, this.attributes, this.viewMenuModel);
 	}
-	
 }
 
 
@@ -58,8 +59,6 @@ ContentAssistant.prototype.handleCommand = function(event) {
 				break;
 			break;
 			case 'do-save':
-				//To update an existing entry, call add() again with the key of the entry you want to update.
-				//this.db.simpleAdd("myFeed", this.feedList, this.dbSuccess, this.dbFailure);
 				this.updateTables(this.db, this.feed);
 				this.controller.showAlertDialog({
 			    title: $L("Added to Favorites!"),
@@ -72,15 +71,19 @@ ContentAssistant.prototype.handleCommand = function(event) {
 				this.controller.showAlertDialog({
 				onChoose: function(value) {
 					if (value == "twitter") {
-						this.controller.stageController.swapScene('twitter', this.feed.url, this.feed.title);
+						this.controller.stageController.pushScene('twitter', this.feed.url, this.feed.title);
 					}
 					else if (value == "email"){
 						this.emailLink(this.feed.url);
+					}
+					else if (value == "sms"){
+						this.smsLink(this.feed.url);
 					}},
 			    title: $L("Share"),
 				message: $L("Share this URL by:"),
 				choices:[
 					{label:$L('Email'), value:"email"},
+					{label:$L('SMS'), value:"sms"},
 	 				{label:$L('Twitter'), value:"twitter"},
 					{label:$L('Cancel'), value:"cencel", type:'dismiss'}
 					]				    
@@ -113,7 +116,7 @@ ContentAssistant.prototype.launchYoutube = function(event, video){
 }
 
 
-ContentAssistant.prototype.displayContent = function (content, id) {
+ContentAssistant.prototype.displayContent = function (content) {
 	
 	str = content;
 	
@@ -128,13 +131,13 @@ ContentAssistant.prototype.displayContent = function (content, id) {
 	// *** Remove Digg links etc. ***
 	
 	var junk = /<p class="commentnow">[\S\s]*/;
-	var junk2 = /<a rel="nofollow"[\S\s]*/;
+	//var junk2 = /<a rel="nofollow"[\S\s]*/;
 	if (str.match(junk)) {
 		str = str.replace(junk, '');
 		str += '</div>';
-	} else if (str.match(junk2)) {
-		str = str.replace(junk2, '');
-		str += '</div>';
+	//} else if (str.match(junk2)) {
+	//	str = str.replace(junk2, '');
+	//	str += '</div>';
 	}
 
 	
@@ -144,7 +147,7 @@ ContentAssistant.prototype.displayContent = function (content, id) {
 	var youtubeEmbed = /<object[\S\s]+?http:\/\/www\.youtube\.com\/v\/([\w\-]+)[\S\s]+?<\/object>/ig;
 	
 	var youtubeThumbButton = '<div class="youtubeThumb">$1<a href="http://www.youtube.com/watch?v=$2"><img src="images/play.png" class="play"/></a></div>';
-	var youtubeThumbButtonGeneric = '<a href="http://www.youtube.com/watch?v=$1"><img src="images/youttube_thumb_generic" alt="play" id="youtubeBtn" /></a>';
+	var youtubeThumbButtonGeneric = '<div class="youtubeThumb"><a href="http://www.youtube.com/watch?v=$1"><img src="images/youtube_thumb_generic" alt="play" id="youtubeBtn" /></a></div>';
 
 	if (str.match(youtubeThumb)) {
 		str = str.replace(youtubeThumb, youtubeThumbButton);
@@ -178,20 +181,78 @@ ContentAssistant.prototype.displayContent = function (content, id) {
 	}
 	*/	
 		
-	// *** Display the content ***
-	this.controller.get(id).innerHTML = str;
+	// Content DOM -
+	// 1. insert a magnify icon
+	// 2. get the image url to pass to an ImageView
+	// 3. dump the whole content in content container div to dispaly
 	
-	//console.log(str);
+	var div = document.createElement('div');
+	div.innerHTML = str;
+
+/*	add button on multiple images
+	var assetContainers = div.getElementsByClassName('mine_asset');
+	for (var i = 0; i < assetContainers.length; i++) {
+		var icon = document.createElement('div');
+		icon.className = 'magnify';
+		icon.id = 'magnify'+i;
+		assetContainers[i].appendChild(icon);
+	}
+	
+	Use a single image-only for now
+*/
+	if(div.getElementsByClassName('mine_image')[0] || div.getElementsByClassName('mine_asset')[0]) {		
+		var assetContainer = (div.getElementsByClassName('mine_image')[0] || div.getElementsByClassName('mine_asset')[0]);
+		
+		if(assetContainer.getElementsByTagName('img')[0]) {
+			var image = assetContainer.getElementsByTagName('img')[0];
+		 	var imageUrl = image.src;
+			
+			//adding an icon
+			var icon = document.createElement('div');
+			icon.className = 'magnify hide';
+			icon.id = 'magnify0';
+			assetContainer.appendChild(icon);
+			
+			// preload the image 
+			imgObj = new Image();
+			imgObj.src = imageUrl;
+			
+			// Display the content
+			document.getElementById("content").appendChild(div);
+			
+			// add a listener to the button
+			var that = this;
+			document.getElementById('magnify0').addEventListener('click', function(event){ that.viewFullsizeImage(imageUrl) }, false);
+			
+			imgObj.onload = function() {
+				icon.removeClassName('hide');
+				document.getElementById("loading").style.display = 'none';
+			}
+			
+		} else {
+			// Display the content
+			document.getElementById("loading").style.display = 'none';
+			this.controller.get("content").appendChild(div);
+		}
+	} else {
+		// Display the content
+		document.getElementById("loading").style.display = 'none';
+		this.controller.get("content").appendChild(div);
+	}
+}
+
+ContentAssistant.prototype.viewFullsizeImage = function(url) {
+	this.controller.stageController.pushScene('imageviewer', url);
 }
 
 ContentAssistant.prototype.activate = function(event) {
-	  this.controller.get("title").innerHTML = this.feed.title;
-	  this.controller.get("date").innerHTML = this.feed.date;
-	  this.displayContent(this.feed.content, "content");
+	this.controller.get("date").innerHTML = this.feed.date;
+	this.controller.get("loading").innerHTML = "Loading...";
+	this.displayContent(this.feed.content);
 }
 
 // Save (Local DB)
-ContentAssistant.prototype.updateTables = function(db,feed){	
+ContentAssistant.prototype.updateTables = function(db,feed) {	
 	db.transaction( 
         (function (transaction) { 
             transaction.executeSql('INSERT INTO myBookmarks (title, date, content, url, icon) VALUES (?,?,?,?,?)', [feed.title, feed.date, str, feed.url, feed.icon], this.createRecordDataHandler.bind(this), this.errorHandler.bind(this)); 
@@ -211,20 +272,35 @@ ContentAssistant.prototype.createRecordDataHandler = function(transaction, resul
 
 
 ContentAssistant.prototype.emailLink = function(url){
-	// open emailer app
 	this.controller.serviceRequest('palm://com.palm.applicationManager', {
 		method: 'open',
 		parameters: {
 			id: 'com.palm.app.email',
 			params: {
-				uri: 'mailto:?subject=You Can Has LOL!&body=Check out this link that I found using ICanHasLOL App for Palm WebOS!\r\r'+url
+				uri: 'mailto:?subject=You Can Has LOL!&body=Check out this link that I found using "ICanHasLOL for Palm WebOS"!\r\r'+url
 			}
 		}
 	})
 }
 
+ContentAssistant.prototype.smsLink = function(url){
+	this.controller.serviceRequest('palm://com.palm.applicationManager', {
+		method: 'launch',
+		parameters: {
+			id: 'com.palm.app.messaging',
+			params: {
+				messageText: 'Found it with ICanHasLOL for WebOS: ' + url
+			}
+		}
+	})
+}
 
 ContentAssistant.prototype.deactivate = function(event) {
+	// remove the appended content, so that it doesn't keep adding a child node to "content" each time the page is called
+	var element = document.getElementById("content");
+	while (element.firstChild) {
+	  element.removeChild(element.firstChild);
+	}
 }
 
 ContentAssistant.prototype.cleanup = function(event) {

@@ -1,6 +1,6 @@
 [
   {
-	"source": "app/assistants/app-assistant.js"
+    "source": "app/assistants/app-assistant.js"
   },
   {
     "source": "app/assistants/stage-assistant.js"
@@ -29,4 +29,16 @@
     "scenes": "twitter",
     "source": "app/assistants/twitter-assistant.js"
   },
+  {
+    "scenes": "allsites",
+    "source": "app/assistants/allsites-assistant.js"
+  },
+  {
+    "scenes": "preferences",
+    "source": "app/assistants/preferences-assistant.js"
+  },
+  {
+    "scenes": "imageviewer",
+    "source": "app/assistants/imageviewer-assistant.js"
+  }
 ]

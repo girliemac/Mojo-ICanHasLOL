@@ -8,6 +8,7 @@ BookmarksAssistant.prototype.setup = function() {
 	this.controller.setupWidget(Mojo.Menu.commandMenu, undefined, Lol.commandMenuModel);
 	
 	// View Menu
+	/*
 	this.viewMenuModel = {
 		visible: true,
 		items: [
@@ -16,7 +17,7 @@ BookmarksAssistant.prototype.setup = function() {
 		]
 	};
 	this.controller.setupWidget(Mojo.Menu.viewMenu, { spacerHeight: 0, menuClass:'no-fade'}, this.viewMenuModel);
-	
+	*/
    	this.list_saved = [];
 	this.list_model = { items: this.list_saved };
 	
@@ -26,12 +27,12 @@ BookmarksAssistant.prototype.setup = function() {
 	 	swipeToDelete: true
 	};
 
-	this.controller.setupWidget('savedListMenu', attributes, this.list_model);
+	this.controller.setupWidget('listMenu', attributes, this.list_model);
 
-	Mojo.Event.listen(this.controller.get('savedListMenu'),Mojo.Event.listTap, this.callback.bind(this));
+	Mojo.Event.listen(this.controller.get('listMenu'),Mojo.Event.listTap, this.callback.bind(this));
 	
 	// Swipe to delete
-	Mojo.Event.listen(this.controller.get('savedListMenu'),Mojo.Event.listDelete , this.deleteData.bindAsEventListener(this));
+	Mojo.Event.listen(this.controller.get('listMenu'),Mojo.Event.listDelete , this.deleteData.bindAsEventListener(this));
 }
 
 
@@ -144,7 +145,7 @@ BookmarksAssistant.prototype.ClearTable = function (db){
 }
 
 BookmarksAssistant.prototype.cleanup = function(event) {
-	Mojo.Event.stopListening(this.controller.get('savedListMenu'),Mojo.Event.listTap, this.callback.bind(this));
-	Mojo.Event.stopListening(this.controller.get('savedListMenu'),Mojo.Event.listDelete , this.deleteData.bindAsEventListener(this));
+	Mojo.Event.stopListening(this.controller.get('listMenu'),Mojo.Event.listTap, this.callback.bind(this));
+	Mojo.Event.stopListening(this.controller.get('listMenu'),Mojo.Event.listDelete , this.deleteData.bindAsEventListener(this));
 }
 
