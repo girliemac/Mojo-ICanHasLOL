@@ -129,6 +129,10 @@ body.generic-dark {
 	background: url(../images/menu-icon-forward-disabled.png);
 }
 
+.imageviewer-scene .palm-menu.command-menu.palm-default > .palm-menu-fade {
+	background-image: none;
+}
+
 .logo-wrapper {
 	text-align: center;
 }

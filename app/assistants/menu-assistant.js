@@ -44,26 +44,6 @@ MenuAssistant.prototype.setup = function() {
 
 
 MenuAssistant.prototype.checkFeed = function() {
-	// Check internet Connection
-	imgObj = new Image();
-	imgObj.src = 'http://stats.wordpress.com/g.gif' + '?timestamp=' + new Date().getTime();
-	var self = this;
-	imgObj.onerror = function() {
-		//no internet conenection
-		self.controller.showAlertDialog({
-		    onChoose: function(value) {},
-			title: $L("Connection Failure"),
-			message: $L("No internet connection is detected."),
-			choices:[
-				{label: $L('OK'), value:'ok', type:'color'}    
-			]
-		});
-		self.spinnerModel.spinning = false;
-		self.controller.modelChanged(this.spinnerModel);
-		self.controller.get('splashScrim').hide();
-		break;
-	}
-	
 	//console.log('*** current='+Mojo.Host.current+' *** mojoHost='+Mojo.Host.mojoHost);
 	if (Mojo.Host.current === Mojo.Host.mojoHost) {
 		// use the proxy on mojo-host
@@ -97,11 +77,9 @@ MenuAssistant.prototype.setupModel = function(transport){
 			date: rssItems[i].getElementsByTagName("pubDate").item(0).textContent,
 			content: rssItems[i].getElementsByTagNameNS("http://purl.org/rss/1.0/modules/content/","encoded").item(0).textContent,
 			url: rssItems[i].getElementsByTagName("link").item(0).textContent,
-			//thumbnail: rssItems[i].getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content").item(1).getAttribute("url").textContent,
 			icon: this.feed
 		});
 	}
-	//console.log("******* "+rssItems[0].getElementsByTagNameNS("http://search.yahoo.com/mrss/", "content").item(0).getAttribute("url"));
 	this.controller.modelChanged(this.list_model, this);
 	
 	// Remove the spinner
