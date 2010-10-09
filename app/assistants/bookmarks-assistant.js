@@ -1,5 +1,5 @@
-function BookmarksAssistant(db) {
-	this.db = db;
+function BookmarksAssistant() {
+	
 }
 
 BookmarksAssistant.prototype.setup = function() {
@@ -43,7 +43,7 @@ BookmarksAssistant.prototype.handleCommand = function(event) {
 		switch(event.command)
 		{
 			case 'refresh':
-				this.controller.stageController.swapScene("bookmarks", this.db);
+				this.controller.stageController.swapScene("bookmarks");
 			break;
 			
 			// use this in future
@@ -51,7 +51,7 @@ BookmarksAssistant.prototype.handleCommand = function(event) {
 			this.controller.showAlertDialog({
 				onChoose: function(value) {
 					if (value == "delete") {
-						this.ClearTable(this.db, this.feedItem);
+						this.ClearTable(Lol.db, this.feedItem);
 					}},
 			    title: $L("Delete"),
 			    message: $L("Are you sure you want to delete the entire bookmarks?"),
@@ -70,7 +70,7 @@ BookmarksAssistant.prototype.activate = function(event) {
 	//this.controller.get("appTitle").innerHTML = Mojo.Controller.appInfo.title;
 	
 	// get data from DB
-	this.db.transaction(
+	Lol.db.transaction(
 	    (function (transaction) {
 	        transaction.executeSql("SELECT * from myBookmarks;", [], this.selectDataHandler.bind(this), this.errorHandler.bind(this));
 	    }).bind(this)
@@ -105,7 +105,7 @@ BookmarksAssistant.prototype.errorHandler = function(transaction, error) {
 /* Swipe-to-Delete */
 BookmarksAssistant.prototype.deleteData = function(event){	
 	console.log("**** Swipe-Deleting: ID = "+ event.item.id);
-	var db = this.db;
+	var db = Lol.db;
 	db.transaction( 
         (function (transaction) { 
             transaction.executeSql('DELETE FROM myBookmarks WHERE id = ?', [event.item.id], this.deleteDataHandler.bind(this), this.deleteErrorHandler.bind(this)); 
@@ -120,7 +120,7 @@ BookmarksAssistant.prototype.deleteErrorHandler = function(transaction, error) {
 BookmarksAssistant.prototype.deleteDataHandler = function(transaction, results) 
 {
 	console.log("**** Deleted 1 record");
-	//this.controller.stageController.swapScene("favorites", this.db);
+	//this.controller.stageController.swapScene("favorites");
 } 
 
 
@@ -131,7 +131,7 @@ BookmarksAssistant.prototype.deactivate = function(event) {
 
 
 BookmarksAssistant.prototype.callback = function(event){
-	this.controller.stageController.pushScene("bookmarked-content", event.index, this.list_saved, this.db);
+	this.controller.stageController.pushScene("bookmarked-content", event.index, this.list_saved);
 }
 
 // Delete the entire bookmarks

@@ -1,17 +1,25 @@
-<div class="palm-page-header twitter-header">
-	<div class="palm-page-header-wrapper">
-		<div class="icon palm-account-icon twitter"></div>
+<div class="twitter-header">
+	<div class="twitter-header-wrapper">
+		<div class="icon twitter"></div>
 		<div class="title">
 			Post on Twitter
 		</div>
 	</div>		
 </div>
 
+<div id="twitterUserInfo" class="twitter-container">
+	<div id="avatar" class="avatar-icon"><img src="" id="avatar-img"/></div>
+	<div class="names">
+		<div id="fullname" class="twitter-fullname"></div>
+		<div id="screenname" class="twitter-name"></div>
+	</div>
+</div>
+
+<!-- legacy - switch to oAuth 
 <div class="palm-group unlabeled">
 	<div class="palm-list">  
 		<div class='palm-row first'>
 			<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
-				<!--<div class="label">username</div>-->
 				<div class="title">
 					<div id="user-field" x-mojo-element="TextField"></div>
 				</div>
@@ -20,7 +28,6 @@
 		<div class="palm-list">
 			<div class='palm-row last'>
 				<div class="palm-row-wrapper textfield-group" x-mojo-focus-highlight="true">
-					<!--<div class="label">password</div>-->
 					<div class="title">
 						<div id="pass-field" x-mojo-element="PasswordField"></div>
 					</div>
@@ -29,6 +36,7 @@
 		</div>
 	</div>
 </div>
+-->
 
 <div class="palm-inline-error" style="display:none" id="error_message">
 	<div class="error-message">Authentication Failed</div>

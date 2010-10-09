@@ -1,8 +1,60 @@
 function TwitterAssistant(url, title) {
 	this.url = url;
 	this.title = title;
-	this.cookie = new Mojo.Model.Cookie("TwitterInfo");
+	this.authCookie = new Mojo.Model.Cookie("TwitterAuth");
+	this.accountCookie = new Mojo.Model.Cookie("TwitterAccount");
+	this.screen_name;
+	this.oauth_token;
+	this.oauth_token_secret;
 }
+
+TwitterAssistant.prototype.setup = function() {
+	//this.accountCookie.remove();
+	var savedInfo = this.accountCookie.get();
+	
+	if (!savedInfo || !savedInfo.cookieUser) {	
+		Mojo.Controller.stageController.swapScene('account', this.url, this.title, 'twitter');
+	} else {
+		this.screen_name = savedInfo.cookieUser;
+		
+		var full_name = savedInfo.cookieFullname;
+		var avatar = savedInfo.cookieAvatar;
+		//Mojo.Log.info('@@@@@@@@@@@@@@@@@@@@@@@@@@@@ has cookie. avatar = %s', avatar);
+		
+		// display user's name and avatar
+		this.controller.get('avatar-img').src = avatar;
+		this.controller.get('fullname').innerHTML = full_name;
+		this.controller.get('screenname').innerHTML = '@'+this.screen_name;	
+	}
+	
+	this.twitterModel = {
+		value: ''
+	};
+	this.shortenUrl(this.url);
+		
+	/* Post */
+	this.controller.setupWidget('post-field', {
+			multiline: true,
+			changeOnKeyPress: true,
+			holdToEdit: true
+		}, 
+		this.twitterModel
+	);
+	
+	/* Button */
+	this.buttonModel = {
+		buttonClass:'affirmative', 
+		buttonLabel:$L('Tweet!'), 
+		disabled:false
+	};
+	this.controller.setupWidget('submit-twitter', {type: Mojo.Widget.activityButton}, this.buttonModel);
+		
+	// Set up our event listeners. 
+	Mojo.Event.listen(this.controller.get('post-field'), Mojo.Event.propertyChange, this.updateCharCount.bindAsEventListener(this));
+	Mojo.Event.listen(this.controller.get('submit-twitter'), Mojo.Event.tap, this.sendPost.bindAsEventListener(this));	
+	Mojo.Event.listen(this.controller.get('cancel-twitter'), Mojo.Event.tap, this.cancelTweet.bindAsEventListener(this));	
+}
+
 TwitterAssistant.prototype.shortenUrl = function(url){
 	
 	var bitlyApiKey = 'R_3e4e0eaca1e85f3eaf77f33db90b25fe'; 
@@ -34,74 +86,6 @@ TwitterAssistant.prototype.shortenUrl = function(url){
 	}
 	
 }
-TwitterAssistant.prototype.setup = function() {
-	/* init values - use cookies if there */
-	
-	this.twitterModel = {
-		username: false,
-		password: false,
-		value: ''
-	};
-	
-	this.shortenUrl(this.url);
-	
-	/* Username */
-	this.controller.setupWidget('user-field', {
-			hintText: 'Username',
-			modelProperty:'username', 
-			changeOnKeyPress: true,
-			focusMode: Mojo.Widget.focusSelectMode,
-			textCase: Mojo.Widget.steModeLowerCase
-		},
-		this.twitterModel
-	);
-
-	/* Password */
-	this.controller.setupWidget('pass-field', {
-	        hintText: 'Password',
-			modelProperty: 'password',
-			changeOnKeyPress: true, 
-			focusMode: Mojo.Widget.focusSelectMode
-		},
-		this.twitterModel
-	    );
-	
-	/* Post */
-	this.controller.setupWidget('post-field', {
-			multiline: true,
-			enterSubmits: true,
-			changeOnKeyPress: true
-		},
-	this.twitterModel
-	);
-	
-	/* Button */
-	this.buttonModel = {
-		buttonClass:'affirmative', 
-		buttonLabel:$L('Tweet!'), 
-		disabled:true
-	};
-	this.controller.setupWidget('submit-twitter', {type: Mojo.Widget.activityButton}, this.buttonModel);
-	
-	/* Get Cookie info */
-	var savedInfo = this.cookie.get();
-	if (savedInfo) {	
-		this.twitterModel.username = savedInfo.cookieName;
-		this.twitterModel.password = savedInfo.cookiePass;
-		this.buttonModel.disabled = false;
-		
-		this.controller.modelChanged(this.twitterModel);
-		this.controller.modelChanged(this.buttonModel);
-	}
-
-	
-	//Set up our event listeners. 
-	//Mojo.Event.listen(this.controller.get('user-field'), Mojo.Event.propertyChange, this.validateLogin.bindAsEventListener(this));
-	Mojo.Event.listen(this.controller.get('pass-field'), Mojo.Event.propertyChange, this.validateLogin.bindAsEventListener(this));
-	Mojo.Event.listen(this.controller.get('post-field'), Mojo.Event.propertyChange, this.updateCharCount.bindAsEventListener(this));
-	Mojo.Event.listen(this.controller.get('submit-twitter'), Mojo.Event.tap, this.sendPost.bindAsEventListener(this));	
-	Mojo.Event.listen(this.controller.get('cancel-twitter'), Mojo.Event.tap, this.cancelTweet.bindAsEventListener(this));	
-}
 
 TwitterAssistant.prototype.generateTweet = function(transport) {
 	var shortUrl = transport.responseJSON.results[this.url].shortUrl;
@@ -115,8 +99,8 @@ TwitterAssistant.prototype.generateTweet = function(transport) {
 	title = title.replace( /\u2013/g, '-' );
 	title = title.replace( /\u2014/g, '--' );
 	
-	var message = 'Found it with ICanHasLOL for WebOS: ' + title + ' - ' + shortUrl;
-	//console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> message = ' + message);
+	var message = 'Found it with ICanHasLOL for webOS: ' + title + ' - ' + shortUrl;
+
 	this.twitterModel.value = message;
 	this.controller.modelChanged(this.twitterModel);
 	this.updateCharCount();
@@ -135,90 +119,78 @@ TwitterAssistant.prototype.validateLogin = function(event){
 }
 
 TwitterAssistant.prototype.sendPost = function(event){
-	// Authenticate
-	var name = this.twitterModel.username;
-	var pass = this.twitterModel.password;
-	var post = this.twitterModel.value;
+	var stage = this.controller.stageController;
+	
+	var tweet = this.twitterModel.value;
+	var postUrl = "http://twitter.com/statuses/update.json";
 	
 	var authErrorDiv = document.getElementById('error_message');
 	var submitButtonDiv = document.getElementById('submit-twitter');
-	
-	var stage = this.controller.stageController;
-	
-	var authUrl = "http://" + name + ":" + pass + "@twitter.com/account/verify_credentials.json";
-	//console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> authurl ' + authUrl);
-	
+
+	this.oauth_token = this.authCookie.get().cookieOauthToken;
+	this.oauth_token_secret = this.authCookie.get().cookieOauthTokenSecret;
+
+	var consumer_key = Lol.twitterConsumerKeys.consumer_key;
+	var consumer_key_secret = Lol.twitterConsumerKeys.consumer_key_secret;
+
+	var timestamp = OAuth.timestamp();
+    var nonce = OAuth.nonce(11);
+
+	// get oauth_signature		
+	this.accessor = {consumerSecret: consumer_key_secret, tokenSecret : this.oauth_token_secret};
+    this.message = {method: 'POST', action: postUrl, parameters: OAuth.decodeForm('')};
+    this.message.parameters.push(['oauth_consumer_key',this.consumer_key]);
+    this.message.parameters.push(['oauth_nonce',nonce]);
+    this.message.parameters.push(['oauth_signature_method','HMAC-SHA1']);
+    this.message.parameters.push(['oauth_timestamp',timestamp]);
+	this.message.parameters.push(['oauth_token',this.oauth_token]);
+    this.message.parameters.push(['oauth_version','1.0']);
+	this.message.parameters.push(['status',tweet]);
+    this.message.parameters.sort()
+    OAuth.SignatureMethod.sign(this.message, this.accessor);
+    this.authHeader = OAuth.getAuthorizationHeader("", this.message.parameters);
+		
+		
+	var sendObj = {	
+		'status': tweet
+	};
+			
 	try {
-		var request = new Ajax.Request(authUrl, {
-			method: 'get',
-			evalJSON: 'force',
-			requestHeaders: ["Authorization", "Basic " + btoa(name + ":" + pass)],
+		var request2 = new Ajax.Request(postUrl, {
+			method: 'post',
+			parameters: sendObj,
+			//requestHeaders: ["Authorization", "Basic " + btoa(name + ":" + pass)],
+			requestHeaders:['Authorization', this.authHeader],
+			contentType: 'application/x-www-form-urlencoded',
 			onComplete: function(transport){
-				if (transport.responseJSON.error) {
-					// Not authenticated
-					//console.log('>>>>>>>>>>>>>' +transport.responseJSON.error);
-					authErrorDiv.style.display = 'block';
-					submitButtonDiv.mojo.deactivate();
+				Mojo.Log.info('@@@@@@@@@@@@@@@@@@@ HEADERS: %s', transport.getAllHeaders());
+				if(transport.status == 200) {
+					stage.popScene();
 				} else {
-					// authenticated
-					// Hide the error message
-					if(authErrorDiv.style.display == 'block') {
-						authErrorDiv.style.visibility = 'hidden';
-					}
-					
-					// Send to Twitter
-					var sendObj = {};
-					var postUrl = "http://"+name+":"+pass+"@twitter.com/statuses/update.json";
-					
-					sendObj = {"status":post,"source":"iCanHasLOL"};
-					
-					try {
-						var request2 = new Ajax.Request(postUrl, {
-							method: 'post',
-							parameters: sendObj,
-							requestHeaders: ["Authorization", "Basic " + btoa(name + ":" + pass)],
-							onComplete: function(transport){
-								// close and go back
-								//console.log('>>>>>>>>>>>>>>>>>>>>>>>>>> has been sent: ' + sendObj.status);
-								submitButtonDiv.mojo.deactivate();
-								stage.popScene();
-							},
-							onFailure: function (transport) {
-				            	Mojo.Controller.errorDialog("POST Error");
-								submitButtonDiv.mojo.deactivate();
-				        	}
-						});
-					}
-					catch (e){
-						console.log(e);
-						Mojo.Controller.errorDialog("Twitter Error");
-						submitButtonDiv.mojo.deactivate();
-					}
+					Mojo.Controller.errorDialog("Status: "+transport.status+ ' - ' +transport.responseJSON.error);
 				}
+				submitButtonDiv.mojo.deactivate();
 			},
 			onFailure: function (transport) {
-            	Mojo.Controller.errorDialog(e);
+            	Mojo.Controller.errorDialog("POST Error");
 				submitButtonDiv.mojo.deactivate();
         	}
 		});
 	}
 	catch (e){
 		console.log(e);
-		Mojo.Controller.errorDialog("Twitter Error");
+		Mojo.Controller.errorDialog(e);
 		submitButtonDiv.mojo.deactivate();
 	}
 }
 
-TwitterAssistant.prototype.updateCharCount = function(){
-	Mojo.Log.info("********* property Change *************");   
+TwitterAssistant.prototype.updateCharCount = function(){ 
 	var chars  = this.twitterModel.value.length;    
 	var charleft = 140 - chars;
 	document.getElementById('char-counter').innerHTML = charleft.toString();
 }
 
 TwitterAssistant.prototype.activate = function(event) {
-	/* put in event handlers here that should only be in effect when this scene is active. For
-	   example, key handlers that are observing the document */
 }
 
 TwitterAssistant.prototype.cancelTweet = function(event){
@@ -226,17 +198,12 @@ TwitterAssistant.prototype.cancelTweet = function(event){
 }
 
 TwitterAssistant.prototype.deactivate = function(event) {
-	/* store cookie */
-	this.cookie.put({
-		cookieName: this.twitterModel.username, 
-		cookiePass: this.twitterModel.password
-	});
 }
 
 TwitterAssistant.prototype.cleanup = function(event) {
-	//Mojo.Event.stopListening(this.controller.get('user-field'), Mojo.Event.propertyChange, this.validateLogin.bindAsEventListener(this));
-	Mojo.Event.stopListening(this.controller.get('pass-field'), Mojo.Event.propertyChange, this.validateLogin.bindAsEventListener(this));
 	Mojo.Event.stopListening(this.controller.get('post-field'), Mojo.Event.propertyChange, this.updateCharCount.bindAsEventListener(this));
 	Mojo.Event.stopListening(this.controller.get('submit-twitter'), Mojo.Event.tap, this.sendPost.bindAsEventListener(this));
 	Mojo.Event.stopListening(this.controller.get('cancel-twitter'), Mojo.Event.tap, this.cancelTweet.bindAsEventListener(this));	
 }
+
+

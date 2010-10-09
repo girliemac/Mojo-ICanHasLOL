@@ -1,12 +1,12 @@
 {
 	"id": "com.candymob.icanhaslol",
-	"version": "1.0.0",
-	"release_date":	"April 2010",
+	"version": "2.0.0",
+	"release_date":	"October 2010",
 	"vendor": "CandyBar Mobile",
 	"type": "web",
 	"main": "index.html",
 	"title": "ICanHasLOL",
 	"icon": "icon-lol.png",
 	"splashicon": "icon-lol-256x256.png",
-	"theme": "dark"
+	"theme": "palm-dark"
 }

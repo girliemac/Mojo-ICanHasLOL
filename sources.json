@@ -40,5 +40,16 @@
   {
     "scenes": "imageviewer",
     "source": "app/assistants/imageviewer-assistant.js"
+  },
+  {
+    "scenes": "account",
+    "source": "app/assistants/account-assistant.js"
+  },
+  {
+	"source": "app/assistants/utils/oauth.js"
+  },
+  {
+    "scenes": "oauth",
+    "source": "app/assistants/oauth-assistant.js"
   }
 ]

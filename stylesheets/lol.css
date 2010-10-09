@@ -40,8 +40,9 @@ body.generic-dark {
 
 /* Feed icons */
 
-#listMenu .palm-row .title{
+#listMenu .palm-row .title {
 	padding-left: 42px;
+	background: url(../images/list-icons/icon-rss.png) no-repeat 10px center;
 }
 #listMenu .palm-row .title.ICanHasCheezburger {
 	background: url(../images/list-icons/icon-ICanHasCheezburger.png) no-repeat 10px center;
@@ -69,39 +70,6 @@ body.generic-dark {
 }
 #listMenu .palm-row .title.EngrishFunny {
 	background: url(../images/list-icons/icon-EngrishFunny.png) no-repeat 10px center;
-}
-#listMenu .palm-row .title.VeryDemotivational,
-#listMenu .palm-row .title.ActingLikeAnimals,
-#listMenu .palm-row .title.IHTPT,
-#listMenu .palm-row .title.MyFirstFail,
-#listMenu .palm-row .title.Comixed,
-#listMenu .palm-row .title.FriendsOfIrony,
-#listMenu .palm-row .title.ThereIFixedIt,
-#listMenu .palm-row .title.Failbooking,
-#listMenu .palm-row .title.Mthruf,
-#listMenu .palm-row .title.lfmf,
-#listMenu .palm-row .title.PoorlyDressed,
-#listMenu .palm-row .title.TWBO,
-#listMenu .palm-row .title.Wedinator,
-#listMenu .palm-row .title.ProbablyBadNews,
-#listMenu .palm-row .title.PictureIsUnrelated,
-#listMenu .palm-row .title.ThisIsPhotobomb,
-#listMenu .palm-row .title.Hawtness,
-#listMenu .palm-row .title.AutocompleteMe,
-#listMenu .palm-row .title.LovelyListing,
-#listMenu .palm-row .title.TTARDI,
-#listMenu .palm-row .title.UgliestTattoos,
-#listMenu .palm-row .title.Hackedirl,
-#listMenu .palm-row .title.AOT,
-#listMenu .palm-row .title.OddlySpecific,
-#listMenu .palm-row .title.ItMadeMyDay,
-#listMenu .palm-row .title.EpicWinFTW,
-#listMenu .palm-row .title.OnceUponAWin,
-#listMenu .palm-row .title.Babysaur,
-#listMenu .palm-row .title.DailySquee,
-#listMenu .palm-row .title.epicuteblog,
-#listMenu .palm-row .title.MustHaveCute {
-	background: url(../images/list-icons/icon-rss.png) no-repeat 10px center;
 }
 
 /* Command Menu Override */
@@ -279,11 +247,29 @@ h2#title{
 }
 */
 
-/* Twitter in Dialog */
+/* Twitter */
 
-.palm-account-icon.twitter {
+.twitter-header {
+	background: url(../images/twitter-header.png) left bottom repeat-x;
+}
+
+.twitter-header-wrapper {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;	
+	height: 50px;
+}
+
+.icon.twitter {
+	width: 32px;
+	height: 50px;
+	margin: 0 10px;
 	background: url(../images/header-icon-twitter.png) no-repeat 50% 50%;
 }
+
+.twitter-header-wrapper .title {
+	padding-top: 11px;
+}
+
 #char-counter {
 	text-align: right;
 	padding-right: 10px;
@@ -291,4 +277,45 @@ h2#title{
 	color: #aaa;
 	font-size: 1.3em;
 	font-weight: bold;
+}
+
+.twitter-container {
+	display: -webkit-box;
+	-webkit-box-orient: horizontal;
+}
+
+#twitterAccount.twitter-container {	
+	margin: 5px 10px 5px 12px;
+}
+
+#twitterUserInfo.twitter-container {	
+	margin: 15px 12px 0;
+}
+
+.avatar-icon {
+	width: 55px;
+	-webkit-border-radius: 8px;
+}
+
+.twitter-fullname {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+}
+.twitter-name {
+	font-size: 75%;
+}
+
+.avatar-set {
+	width: 52px;
+	height: 52px;
+	-webkit-background-size: 50px;
+	background: url() center center no-repeat;
+    -webkit-border-radius: 9px;
+	margin-right: 12px;
+}
+
+.avatar-frame {
+	background: url(../images/avatar-frame.png) no-repeat center center;
+	width: 100%;
+	height: 100%;
 }

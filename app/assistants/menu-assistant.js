@@ -1,5 +1,4 @@
-function MenuAssistant(db, feed, title) {
-	this.db = db;
+function MenuAssistant(feed, title) {
 	this.url = 'http://feeds.feedburner.com/'+feed;
 	this.feed = feed;
 	this.title = title;
@@ -112,7 +111,7 @@ MenuAssistant.prototype.failure = function(transport) {
 }
 
 MenuAssistant.prototype.goContent = function(event){
-	this.controller.stageController.pushScene("content", event.index, this.list_feed, this.db);
+	this.controller.stageController.pushScene("content", event.index, this.list_feed);
 }
 
 MenuAssistant.prototype.handleCommand = function(event) {
@@ -122,7 +121,7 @@ MenuAssistant.prototype.handleCommand = function(event) {
 			case 'back':
 			break;
 			case 'refresh':
-				this.controller.stageController.swapScene("menu", this.db, this.feed);
+				this.controller.stageController.swapScene("menu", this.feed);
 			break;
 			default:
 				//Mojo.Controller.errorDialog("Got command " + event.command);

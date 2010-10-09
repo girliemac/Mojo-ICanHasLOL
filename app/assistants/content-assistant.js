@@ -1,8 +1,7 @@
-function ContentAssistant(index, feedList, db) {
+function ContentAssistant(index, feedList) {
 	this.index = index;
 	this.feedList = feedList;
 	this.feed = feedList[index];
-	this.db = db;
 	var str;
 }
 
@@ -54,12 +53,12 @@ ContentAssistant.prototype.handleCommand = function(event) {
 			break;
 			case 'go-next':
 				var nextIndex = this.index+1;
-				this.controller.stageController.pushScene("content", nextIndex, this.feedList, this.db);
+				this.controller.stageController.pushScene("content", nextIndex, this.feedList);
 				//console.log("**** this index="+this.index+", Next="+nextIndex);
 				break;
 			break;
 			case 'do-save':
-				this.updateTables(this.db, this.feed);
+				this.updateTables(Lol.db, this.feed);
 				this.controller.showAlertDialog({
 			    title: $L("Added to Favorites!"),
 				choices:[
@@ -74,10 +73,10 @@ ContentAssistant.prototype.handleCommand = function(event) {
 						this.controller.stageController.pushScene('twitter', this.feed.url, this.feed.title);
 					}
 					else if (value == "email"){
-						this.emailLink(this.feed.url);
+						AppAssistant.emailLink(this.feed.url);
 					}
 					else if (value == "sms"){
-						this.smsLink(this.feed.url);
+						AppAssistant.smsLink(this.feed.url);
 					}},
 			    title: $L("Share"),
 				message: $L("Share this URL by:"),
@@ -181,7 +180,7 @@ ContentAssistant.prototype.displayContent = function (content) {
 	}
 	*/	
 		
-	// Content DOM -
+	// Content DOM - hate this combersomeness. I need to think...
 	// 1. insert a magnify icon
 	// 2. get the image url to pass to an ImageView
 	// 3. dump the whole content in content container div to dispaly
@@ -270,30 +269,6 @@ ContentAssistant.prototype.createRecordDataHandler = function(transaction, resul
 	console.log("**** Inserted 1 record");
 } 
 
-
-ContentAssistant.prototype.emailLink = function(url){
-	this.controller.serviceRequest('palm://com.palm.applicationManager', {
-		method: 'open',
-		parameters: {
-			id: 'com.palm.app.email',
-			params: {
-				uri: 'mailto:?subject=You Can Has LOL!&body=Check out this link that I found using "ICanHasLOL for Palm WebOS"!\r\r'+url
-			}
-		}
-	})
-}
-
-ContentAssistant.prototype.smsLink = function(url){
-	this.controller.serviceRequest('palm://com.palm.applicationManager', {
-		method: 'launch',
-		parameters: {
-			id: 'com.palm.app.messaging',
-			params: {
-				messageText: 'Found it with ICanHasLOL for WebOS: ' + url
-			}
-		}
-	})
-}
 
 ContentAssistant.prototype.deactivate = function(event) {
 	// remove the appended content, so that it doesn't keep adding a child node to "content" each time the page is called

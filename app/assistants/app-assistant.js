@@ -1,7 +1,9 @@
-function Lol() {
-}
+/* Globals */
 
-// App Menu Model (Global)
+// Namespace
+Lol = {};
+
+// App Menu Model
 Lol.commandMenuModel = {
 	items: [
 		{label: $L('Home'), icon: 'home', command: 'go-home'},
@@ -21,6 +23,9 @@ Lol.directory = [
 	{category:'LOL', label:'My First Fail', value:'MyFirstFail', description:'Funny Babies!'},
 	{category:'LOL', label:'Comixed', value:'Comixed', description:'(sorta NSFW) Vertical 4 Pane Comics'},
 	{category:'LOL', label:'Friends of Irony', value:'FriendsOfIrony', description:'Ironic Moments of Irony'},
+	{category:'LOL', label:'Historic LOL', value:'HistoricLOLs', description:'Captioned Portraits of Yore'},
+	{category:'LOL', label:'My Food Looks Funny', value:'MFLF', description:'Funny Food Photos'},
+	{category:'LOL', label:'So Much Pun', value:'SoMuchPun', description:'Visual Puns and Jokes'},
 	{category:'FAIL', label:'FAILBlog', value:'failblog', description:'Funny FAIL Pictures and Videos'},
 	{category:'FAIL', label:'There I Fixed It', value:'ThereIFixedIt', description:'Funny Bad Repairs'},
 	{category:'FAIL', label:'Engrish Funny', value:'EngrishFunny', description:'Funny Engrish pictures from around the world.'},
@@ -46,6 +51,7 @@ Lol.directory = [
 	{category:'WTF?', label:'Hacked IRL', value:'Hackedirl', description:'Culture Jamming Wins'},
 	{category:'WTF?', label:'Art of Trolling', value:'AOT', description:'Messages from the Padded Inbox'},
 	{category:'WTF?', label:'Oddly Specific', value:'OddlySpecific', description:'Funny Signs'},
+	{category:'WTF?', label:'Derp', value:'herpthederp', description:'All the Derp Durr Hurr that\'s fit to Derp'},
 	{category:'WIN', label:'It Made My Day', value:'ItMadeMyDay', description:'Little Moments of Win!'},
 	{category:'WIN', label:'EpicWinFTW', value:'EpicWinFTW', description:'Pure Win Photos'},
 	{category:'WIN', label:'Once Upon A Win', value:'OnceUponAWin', description:'Epic Wins from the Past'},
@@ -54,3 +60,74 @@ Lol.directory = [
 	{category:'CUTE', label:'Epicute', value:'epicuteblog', description:'The Cute Food Blog'},
 	{category:'CUTE', label:'Must Have Cute', value:'MustHaveCute', description:'See. Want. Must Have!'}
 ];
+
+// Twitter Oauth
+Lol.twitterConsumerKeys = {
+	consumer_key: 'IBCnMJS7FoxqWpn7GOQ4mQ',
+	consumer_key_secret: 'wUHuRHRlpXFWAKds5Fjx3z0cbpmfsqRpldGJwEMiuhw'
+};
+
+// DB
+Lol.db;
+
+
+
+function AppAssistant(controller) {
+}
+
+AppAssistant.prototype.setup = function() {      
+	//Open a database when app started
+	try {
+		Lol.db = openDatabase('lolDB', '1.0', 'LOL DB', 250000);
+		console.log("**** Created database:" +Lol.db);
+		this.CreateTable(Lol.db);
+	} catch (e){
+		console.log(e);		
+	}        
+}
+AppAssistant.prototype.CreateTable = function (db){
+	db.transaction( 
+	    (function (transaction) { 
+		//transaction.executeSql("DROP TABLE myBookmarks", [], this.createTableDataHandler.bind(this), this.errorHandler.bind(this));
+	          transaction.executeSql('CREATE TABLE IF NOT EXISTS myBookmarks(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, title TEXT, date TEXT, content TEXT, url TEXT, icon TEXT);', [], this.createTableDataHandler.bind(this), this.errorHandler.bind(this)); 
+		}).bind(this) 
+    );
+}
+
+AppAssistant.prototype.createTableDataHandler = function(transaction, results) {
+	console.log("*** Created myBookmarks.");
+} 
+
+AppAssistant.prototype.errorHandler = function(transaction, error) { 
+	Mojo.Controller.errorDialog("Database Error");
+    //console.log('*** DB Create Error: '+error.message+' (Code '+error.code+')'); 
+    return true;
+}
+
+// Cross App Launch
+
+AppAssistant.emailLink = function(url){
+	var stage = Mojo.Controller.stageController.activeScene();
+	stage.serviceRequest('palm://com.palm.applicationManager', {
+		method: 'open',
+		parameters: {
+			id: 'com.palm.app.email',
+			params: {
+				uri: 'mailto:?subject=You Can Has LOL!&body=Check out this link that I found using "ICanHasLOL for Palm webOS"!\r\r'+url
+			}
+		}
+	})
+};
+
+AppAssistant.smsLink = function(url){
+	var stage = Mojo.Controller.stageController.activeScene();
+	stage.serviceRequest('palm://com.palm.applicationManager', {
+		method: 'launch',
+		parameters: {
+			id: 'com.palm.app.messaging',
+			params: {
+				messageText: 'Found it with ICanHasLOL for webOS: ' + url
+			}
+		}
+	})
+};

@@ -1,5 +1,5 @@
-function AllsitesAssistant(db) {
-	this.db = db;
+function AllsitesAssistant() {
+
 }
 
 AllsitesAssistant.prototype.setup = function() {
@@ -84,7 +84,7 @@ AllsitesAssistant.prototype.generateList = function() {
 };
 
 AllsitesAssistant.prototype.goSite = function(event){
-	this.controller.stageController.pushScene('menu', this.db, event.item.feed, event.item.sitename);
+	this.controller.stageController.pushScene('menu', event.item.feed, event.item.sitename);
 }
 
 AllsitesAssistant.prototype.activate = function(event) {

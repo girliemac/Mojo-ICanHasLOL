@@ -1,8 +1,7 @@
-function BookmarkedContentAssistant(index,savedList, db) {
+function BookmarkedContentAssistant(index,savedList) {
 	this.index = index;
 	this.savedList = savedList;
 	this.savedItem = savedList[index];
-	this.db = db;
 }
 
 BookmarkedContentAssistant.prototype.setup = function() {
@@ -52,7 +51,7 @@ BookmarkedContentAssistant.prototype.handleCommand = function(event) {
 			break;
 			case 'go-next':
 				var nextIndex = this.index+1;
-				this.controller.stageController.pushScene("bookmarked-content", nextIndex, this.savedList, this.db);
+				this.controller.stageController.pushScene("bookmarked-content", nextIndex, this.savedList);
 				console.log("**** this index="+this.index+", Next="+nextIndex);
 				break;
 			break;
@@ -60,7 +59,7 @@ BookmarkedContentAssistant.prototype.handleCommand = function(event) {
 				this.controller.showAlertDialog({
 				onChoose: function(value) {
 					if (value == "delete") {
-						this.deleteData(this.db, this.savedItem);
+						this.deleteData(Lol.db, this.savedItem);
 					}},
 			    title: $L("Delete"),
 			    message: $L("Are you sure you want to delete this bookmark?"),
@@ -70,7 +69,28 @@ BookmarkedContentAssistant.prototype.handleCommand = function(event) {
 					]				    
 			    });	
 			break;
-			
+			case 'do-share':
+				this.controller.showAlertDialog({
+				onChoose: function(value) {
+					if (value == "twitter") {
+						this.controller.stageController.pushScene('twitter', this.savedItem.url, this.savedItem.title);
+					}
+					else if (value == "email"){
+						AppAssistant.emailLink(this.savedItem.url);
+					}
+					else if (value == "sms"){
+						AppAssistant.smsLink(this.savedItem.url);
+					}},
+			    title: $L("Share"),
+				message: $L("Share this URL by:"),
+				choices:[
+					{label:$L('Email'), value:"email"},
+					{label:$L('SMS'), value:"sms"},
+	 				{label:$L('Twitter'), value:"twitter"},
+					{label:$L('Cancel'), value:"cencel", type:'dismiss'}
+					]				    
+			    });	
+			break;
 			
 			default:
 				//Mojo.Controller.errorDialog("Got command " + event.command);
@@ -98,7 +118,7 @@ BookmarkedContentAssistant.prototype.errorHandler = function(transaction, error)
 BookmarkedContentAssistant.prototype.deleteRecordDataHandler = function(transaction, results) 
 {
 	console.log("**** Delete 1 record");
-	this.controller.stageController.swapScene("bookmarks", this.db);
+	this.controller.stageController.swapScene("bookmarks");
 } 
 
 
